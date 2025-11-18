@@ -1,0 +1,13 @@
+package com.example.java_virtual;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class JavaVirtualApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
