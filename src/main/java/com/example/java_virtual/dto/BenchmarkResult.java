@@ -3,7 +3,7 @@ package com.example.java_virtual.dto;
 import lombok.Builder;
 
 @Builder
-record BenchmarkResult(
+public record BenchmarkResult(
         int requests,
         long platformThreadsMs,
         long virtualThreadsMs,
