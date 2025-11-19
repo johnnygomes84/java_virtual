@@ -20,19 +20,15 @@ public class BenchmarkService {
 
     public BenchmarkResponse runBenchmark(int requests) {
         log.info("Starting benchmark with {} requests", requests);
-
         validateRequestCount(requests);
 
-        var platformTime = threadBenchmarkService.runWithPlatformThreads(
-                requests, config.getPlatformThreadPoolSize());
-        var virtualTime = threadBenchmarkService.runWithVirtualThreads(requests);
-
-        return buildResponse(requests, platformTime, virtualTime);
+        var result = executeAndBuildResult(requests);
+        return convertToResponse(result);
     }
 
     public BenchmarkSummaryResponse runSummaryBenchmark(List<Integer> requestCounts) {
         var benchmarks = requestCounts.stream()
-                .map(this::runSingleBenchmark)
+                .map(this::executeAndBuildResult)
                 .toList();
 
         var conclusion = generateConclusion(benchmarks);
@@ -43,7 +39,7 @@ public class BenchmarkService {
                 .build();
     }
 
-    private BenchmarkResult runSingleBenchmark(int requests) {
+    private BenchmarkResult executeAndBuildResult(int requests) {
         var platformTime = threadBenchmarkService.runWithPlatformThreads(
                 requests, config.getPlatformThreadPoolSize());
         var virtualTime = threadBenchmarkService.runWithVirtualThreads(requests);
@@ -56,12 +52,12 @@ public class BenchmarkService {
                 .build();
     }
 
-    private BenchmarkResponse buildResponse(int requests, long platformTime, long virtualTime) {
+    private BenchmarkResponse convertToResponse(BenchmarkResult result) {
         return BenchmarkResponse.builder()
-                .requests(requests)
-                .platformThreadsMs(platformTime)
-                .virtualThreadsMs(virtualTime)
-                .performanceImprovement(calculateImprovement(platformTime, virtualTime))
+                .requests(result.requests())
+                .platformThreadsMs(result.platformThreadsMs())
+                .virtualThreadsMs(result.virtualThreadsMs())
+                .performanceImprovement(result.performanceImprovement())
                 .build();
     }
 
@@ -90,8 +86,8 @@ public class BenchmarkService {
         if (requests <= 0) {
             throw new IllegalArgumentException("Requests must be positive");
         }
-        if (requests > 1000) {
-            throw new IllegalArgumentException("Requests cannot exceed 1000");
+        if (requests > config.getMaxRequests()) {
+            throw new IllegalArgumentException("Requests cannot exceed " + config.getMaxRequests());
         }
     }
 }

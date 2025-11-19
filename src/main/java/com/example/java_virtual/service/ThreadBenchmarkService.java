@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.IntStream.range;
 
 @Slf4j
 @Service
@@ -48,9 +50,9 @@ public class ThreadBenchmarkService {
     private long executeBenchmark(int requests, ExecutorService executor, String threadType) {
         var startTime = Instant.now();
 
-        List<Future<?>> futures = IntStream.range(0, requests)
+        List<Future<?>> futures = range(0, requests)
                 .mapToObj(taskId -> executor.submit(() -> httpRequestService.performHttpRequest(taskId)))
-                .collect(java.util.stream.Collectors.toList());
+                .collect(toList());
 
         waitForAllFutures(futures);
 

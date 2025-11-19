@@ -3,6 +3,7 @@ app:
     target-url: "https://httpbin.org/delay/1"  # Target endpoint for benchmarking
     platform-thread-pool-size: 10              # Size of platform thread pool
     timeout-seconds: 10                        # HTTP request timeout
+    max-requests: 1000                         # HTTP Max request allowed
 
 server:
   port: 8888

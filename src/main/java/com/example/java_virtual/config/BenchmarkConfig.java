@@ -13,4 +13,5 @@ public class BenchmarkConfig {
     private String targetUrl = "https://httpbin.org/delay/1";
     private int platformThreadPoolSize = 10;
     private int timeoutSeconds = 10;
+    private int maxRequests = 1000;
 }
