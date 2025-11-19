@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/benchmark")
 @RequiredArgsConstructor
@@ -19,8 +21,7 @@ public class BenchmarkController {
     private final BenchmarkService benchmarkService;
 
     @GetMapping
-    public ResponseEntity<BenchmarkResponse> runBenchmark(
-            @RequestParam(defaultValue = "100") int requests) {
+    public ResponseEntity<BenchmarkResponse> runBenchmark(@RequestParam(defaultValue = "100") int requests) {
 
         var result = benchmarkService.runBenchmark(requests);
 
@@ -28,9 +29,9 @@ public class BenchmarkController {
     }
 
     @GetMapping("/summary")
-    public ResponseEntity<BenchmarkSummaryResponse> runSummaryBenchmark() {
+    public ResponseEntity<BenchmarkSummaryResponse> runSummaryBenchmark(@RequestParam List<Integer> requestCounts) {
 
-        var result = benchmarkService.runSummaryBenchmark();
+        var result = benchmarkService.runSummaryBenchmark(requestCounts);
 
         return ResponseEntity.ok(result);
     }

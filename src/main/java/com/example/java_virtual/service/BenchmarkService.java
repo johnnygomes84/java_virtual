@@ -30,8 +30,7 @@ public class BenchmarkService {
         return buildResponse(requests, platformTime, virtualTime);
     }
 
-    public BenchmarkSummaryResponse runSummaryBenchmark() {
-        var requestCounts = List.of(10, 50, 100, 200);
+    public BenchmarkSummaryResponse runSummaryBenchmark(List<Integer> requestCounts) {
         var benchmarks = requestCounts.stream()
                 .map(this::runSingleBenchmark)
                 .toList();
